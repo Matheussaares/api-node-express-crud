@@ -12,16 +12,30 @@ router.get("/:userId", async (req, res) => {
   return res.send(user);
 });
 
-router.post("/", (req, res) => {
-  return res.send("POST HTTP method on user resource");
+router.post("/", async (req, res) => {
+  // Cria um novo usuário com os dados que vierem no corpo da requisição
+  const user = await req.context.models.User.create(req.body);
+  return res.send(user);
 });
 
-router.put("/:userId", (req, res) => {
-  return res.send(`PUT HTTP method on user/${req.params.userId} resource`);
+router.put("/:userId", async (req, res) => {
+  // Busca o usuário pelo ID
+  const user = await req.context.models.User.findByPk(req.params.userId);
+  if (user) {
+    // Se achar, atualiza com os dados novos
+    await user.update(req.body);
+    return res.send(user);
+  } else {
+    return res.status(404).send({ error: "Usuário não encontrado" });
+  }
 });
 
-router.delete("/:userId", (req, res) => {
-  return res.send(`DELETE HTTP method on user/${req.params.userId} resource`);
+router.delete("/:userId", async (req, res) => {
+  // Deleta o usuário baseado no ID passado na URL
+  const result = await req.context.models.User.destroy({
+    where: { id: req.params.userId },
+  });
+  return res.send(result === 1); // Retorna true se deletou com sucesso
 });
 
 export default router;
