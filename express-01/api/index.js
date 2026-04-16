@@ -31,6 +31,7 @@ app.get("/", (req, res) => {
     "Received a GET HTTP method\nServidor rodando!\n" + process.env.MESSAGE,
   );
 });
+app.use("/tarefa", routes.message);
 
 const port = process.env.PORT ?? 3000;
 const eraseDatabaseOnSync = process.env.ERASE_DATABASE_ON_SYNC === "true";
