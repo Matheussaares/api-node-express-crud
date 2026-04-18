@@ -4,12 +4,15 @@ import express from "express";
 
 import models, { sequelize } from "./models";
 import routes from "./routes";
+// 1. Importando a nova rota de tarefas organizada
+import tarefaRoutes from "./routes/tarefa"; 
 
 const app = express();
 app.set("trust proxy", true);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(async (req, res, next) => {
   req.context = {
     models,
@@ -17,6 +20,7 @@ app.use(async (req, res, next) => {
   };
   next();
 });
+
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path} - ${req.ip}`);
   next();
@@ -26,11 +30,16 @@ app.use("/session", routes.session);
 app.use("/users", routes.user);
 app.use("/messages", routes.message);
 
+// 2. Adicionando o endpoint no plural como exigido na nova atividade
+app.use("/tarefas", tarefaRoutes); 
+
 app.get("/", (req, res) => {
   res.send(
     "Received a GET HTTP method\nServidor rodando!\n" + process.env.MESSAGE,
   );
 });
+
+// Mantemos essa para não quebrar o App Mobile da atividade anterior
 app.use("/tarefa", routes.message);
 
 const port = process.env.PORT ?? 3000;
