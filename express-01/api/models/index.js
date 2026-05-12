@@ -2,7 +2,9 @@ import Sequelize from "sequelize";
 
 import getUserModel from "./user";
 import getMessageModel from "./message";
-import getTarefaModel from "./tarefa"; // Importando o novo modelo
+import getTarefaModel from "./tarefa";
+// 1. Importando o modelo de token
+import getRefreshTokenModel from "./refreshToken"; 
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
@@ -20,7 +22,9 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 const models = {
   User: getUserModel(sequelize, Sequelize),
   Message: getMessageModel(sequelize, Sequelize),
-  Tarefa: getTarefaModel(sequelize, Sequelize), // Incluindo Tarefa no objeto models
+  Tarefa: getTarefaModel(sequelize, Sequelize),
+  // 2. Adicionando ao objeto models
+  RefreshToken: getRefreshTokenModel(sequelize, Sequelize), 
 };
 
 Object.keys(models).forEach((key) => {
